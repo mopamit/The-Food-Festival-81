@@ -425,15 +425,17 @@ function drawBoard(){
   board.innerHTML=o;
   if(f.fence)f.fenceShown=true;
 }
+const ART_SCALE=.65;   // המשאית קטנה, ונקודת העמידה בולטת
 function item(type,p,draggable){
   const onGrid=p[1]>=GY[0]-0.01;const art=type==='table'?tableSVG():truckSVG(type);
   const label=type==='table'?'שולחן':'משאית '+TRUCKS[type].name;
   const locked=type==='table'?F().tableDone:F().locked[type];
-  return `<g class="${draggable?'drag':''}" data-type="${type}" ${draggable?`tabindex="0" role="button" aria-label="${label}${onGrid?' בנקודה '+P(...p):' בחניה'}"`:''} transform="translate(${sx(p[0])} ${sy(p[1])})">
-    <rect class="focusring" x="-38" y="-70" width="76" height="78" rx="10" fill="transparent" stroke="none"/>
-    ${art}
-    ${onGrid?`<circle r="6.5" fill="#fff" stroke="${locked?'#6db580':'#832058'}" stroke-width="3"/><circle r="2.2" fill="${locked?'#6db580':'#832058'}"/>`:''}
-    ${onGrid&&(locked||draggable)?`<text class="coord" x="0" y="22" text-anchor="middle">${P(...p)}</text>`:''}
+  // שיעורים מוצגים רק אחרי שהפריט ננעל במקום הנכון — בזמן הגרירה אין רמז
+  return `<g class="${draggable?'drag':''}" data-type="${type}" ${draggable?`tabindex="0" role="button" aria-label="${label}${onGrid?' על המפה':' בחניה'}"`:''} transform="translate(${sx(p[0])} ${sy(p[1])})">
+    <rect class="focusring" x="-30" y="-52" width="60" height="62" rx="10" fill="transparent" stroke="none"/>
+    <g transform="scale(${ART_SCALE})">${art}</g>
+    ${onGrid?`<circle r="8" fill="#fff" stroke="${locked?'#6db580':'#832058'}" stroke-width="3.5"/><circle r="3" fill="${locked?'#6db580':'#832058'}"/>`:''}
+    ${onGrid&&locked?`<text class="coord" x="0" y="24" text-anchor="middle">${P(...p)}</text>`:''}
   </g>`;
 }
 
@@ -452,9 +454,6 @@ board.addEventListener('pointermove',e=>{
   // תצוגה רציפה; הצמדה לצומת הקרוב בזמן הגרירה
   const sn=snap(x,y);const p=sn||[x,y];drag.last=sn;
   drag.g.setAttribute('transform',`translate(${sx(p[0])} ${sy(p[1])})`);
-  let tag=drag.g.querySelector('.livecoord');
-  if(sn){if(!tag){drag.g.insertAdjacentHTML('beforeend',`<text class="coord livecoord" x="0" y="22" text-anchor="middle"></text>`);tag=drag.g.querySelector('.livecoord');}tag.textContent=P(...sn);}
-  else if(tag)tag.remove();
 });
 function snap(x,y){const rx=Math.round(x),ry=Math.round(y);if(rx<GX[0]||rx>GX[1]||ry<GY[0]||ry>GY[1])return null;return [rx,ry];}
 board.addEventListener('pointerup',endDrag);board.addEventListener('pointercancel',()=>{if(drag){drag=null;drawBoard();}});
@@ -482,8 +481,8 @@ function check(type,p){
       else if((a===-x&&b===y)||(a===x&&b===-y)||(a===-x&&b===-y))tip=`שימו לב לסימן: ${M('x')} שלילי — שמאלה מהראשית; ${M('y')} שלילי — למטה.`;
       else if(a===x)tip=`שיעור ה־${M('x')} נכון! בדקו את שיעור ה־${M('y')}.`;
       else if(b===y)tip=`שיעור ה־${M('y')} נכון! בדקו את שיעור ה־${M('x')}.`;
-      else tip=`היא צריכה לעמוד ב־${M(P(x,y))}.`;
-      feedback(`<b>עדיין לא.</b> משאית ${TRUCKS[type].name} עומדת עכשיו ב־${M(P(a,b))}. ${tip}`,'bad');missed();
+      else tip=`בדקו שוב את שני השיעורים: קודם ${M('x')} — ימינה או שמאלה, ואחר כך ${M('y')} — למעלה או למטה.`;
+      feedback(`<b>עדיין לא.</b> משאית ${TRUCKS[type].name} לא עומדת במקום הנכון. ${tip}`,'bad');missed();
     }
   }else if(S_.ti===1){
     const [x,y]=truckOf(type).target;
@@ -496,7 +495,7 @@ function check(type,p){
       if(a===x)tip=`שיעור ה־${M('x')} מתאים! עכשיו הצלע צריכה להיות אופקית: למשאית ${TRUCKS[type].name} ולמשאית ${TRUCKS[sameY.type].name} צריך להיות אותו שיעור ${M('y')}.`;
       else if(b===y)tip=`שיעור ה־${M('y')} מתאים! עכשיו הצלע צריכה להיות אנכית: למשאית ${TRUCKS[type].name} ולמשאית ${TRUCKS[sameX.type].name} צריך להיות אותו שיעור ${M('x')}.`;
       else tip=`במלבן שצלעותיו מקבילות לצירים, לכל קודקוד יש שכן עם אותו שיעור ${M('x')} ושכן עם אותו שיעור ${M('y')}.`;
-      feedback(`<b>עדיין לא.</b> בנקודה ${M(P(a,b))} לא נוצר מלבן. ${tip}`,'bad');missed();
+      feedback(`<b>עדיין לא.</b> כאן לא נוצר מלבן. ${tip}`,'bad');missed();
     }
   }else if(S_.ti===4){
     const [cx,cy]=f.center;
@@ -506,7 +505,7 @@ function check(type,p){
       else if(b===cy)tip=`שיעור ה־${M('y')} נכון! עכשיו מצאו את האמצע בין ${M(mn(f.x1))} ל־${M(mn(f.x2))}.`;
       else if(a<f.x1||a>f.x2||b<f.y1||b>f.y2)tip='השולחן מחוץ למתחם. המרכז נמצא בתוך המלבן.';
       else tip=`המרכז נמצא באמצע הרוחב ובאמצע האורך של המלבן.`;
-      feedback(`<b>עדיין לא.</b> השולחן עומד ב־${M(P(a,b))}. ${tip}`,'bad');missed();}
+      feedback(`<b>עדיין לא.</b> השולחן לא במרכז. ${tip}`,'bad');missed();}
   }
 }
 /* מקלדת: Enter מעביר מהחניה לראשית, החצים מזיזים ביחידה */
