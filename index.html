@@ -117,6 +117,28 @@ dialog li{margin:6px 0}dialog li img{width:26px;height:26px;vertical-align:middl
 /* איורים */
 .hero-img{max-width:860px;border-radius:18px;box-shadow:0 6px 18px rgba(23,54,94,.12);margin:4px auto 10px}
 .chip svg{width:56px;height:44px}
+
+/* מקלדת ותשובה מוקלדת */
+.kb-wrap{margin-top:4px}
+.ans-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.ans-row label{font-weight:700}
+.ans{direction:ltr;font-family:var(--math);font-size:26px;width:140px;padding:6px 12px;border:2px solid var(--border);border-radius:14px;color:var(--blue);text-align:center;background:#fff}
+.ans:focus{outline:none;border-color:var(--blue)} .ans.bad{border-color:var(--mustard)} .ans.ok{border-color:var(--green);background:rgba(109,181,128,.1)}
+.keyboard{display:grid;grid-template-columns:repeat(3,1fr) 8px repeat(2,1fr) 1.5fr;gap:6px;direction:ltr}
+.keyboard .gap{display:block}
+.key{direction:ltr;unicode-bidi:isolate;border:1px solid #d6e0ea;background:#fff;color:#17365e;border-radius:12px;min-height:42px;font-size:21px;font-weight:700;cursor:pointer;box-shadow:0 2px 5px #17365e0b;font-family:Georgia,'Times New Roman',serif}
+.key:hover{border-color:#9fb8d2;background:#f7fbff}
+.key.op{background:#f3f6fa;color:var(--bordo)}
+.key.action{background:#eef3f8;font-family:var(--ui);font-size:16px}
+.key.confirm{grid-column:7;grid-row:1 / span 4;background:var(--bordo);color:#fff;border-color:var(--bordo);font-family:var(--ui);font-size:19px}
+.kb-wrap.idle .keyboard{opacity:.4;pointer-events:none}
+/* בחירה מרובה */
+.options.props{grid-template-columns:1fr 1fr}
+.opt.prop{font-family:var(--ui);font-size:18px;font-weight:600;min-height:54px}
+.opt.prop.sel{border-color:var(--blue);background:#eef3f8;box-shadow:inset 0 0 0 2px var(--blue)}
+.options .check{grid-column:1 / -1;justify-self:start;padding-inline:24px}
+#endArt svg{max-width:520px;margin:4px auto}
+@media (max-width:600px){.keyboard{grid-template-columns:repeat(3,1fr) 4px repeat(2,1fr)} .key.confirm{grid-column:1 / -1;grid-row:5;min-height:46px} .options.props{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -136,8 +158,8 @@ dialog li{margin:6px 0}dialog li img{width:26px;height:26px;vertical-align:middl
   <div class="card center">
     <h2>פסטיבל האוכל</h2>
     <div id="hero"></div>
-    <p>אתם צוות ההפקה של פסטיבלי האוכל בירושלים. מערכת הצירים היא המפה שלכם: כל משבצת היא 5 מטרים.</p>
-    <p>הציבו את משאיות האוכל, הקימו גדר, ומצאו מקום לשולחנות. 3 פסטיבלים מחכים לכם!</p>
+    <p>כמדי שנה הוחלט להקים מתחם משאיות אוכל בעיר ירושלים. כדי לארגן את המתחם בצורה מסודרת, צוות ההפקה השתמש במערכת צירים.</p>
+    <p><b>כל יחידה במערכת הצירים משמשת כ־5 מטר במציאות.</b></p>
     <div class="actions">
       <button class="btn primary" id="startBtn" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBPdXRsaW5lZCBQbGF5IFRyaWFuZ2xlIC0tPgogIDxwb2x5Z29uIHBvaW50cz0iMzQsMjIgNzksNDkgMzQsNzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgLz4KPC9zdmc+" alt=""><span>יוצאים לדרך</span></button>
       <button class="btn secondary" id="newBtn" type="button" hidden><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBUb3AgYXJjIGZyb20gYm90dG9tLWxlZnQgdG8gdG9wLXJpZ2h0IC0tPgogIDxwYXRoIGQ9Ik0gMjEuNSA1MCBBIDMwIDMwIDAgMCAxIDc2IDI5IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIC8+CiAgPCEtLSBUb3AtcmlnaHQgYXJyb3cgaGVhZCAtLT4KICA8cG9seWxpbmUgcG9pbnRzPSI2MywyOCA3OCwyOCA3MiwxMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgogIAogIDwhLS0gQm90dG9tIGFyYyBmcm9tIHRvcC1yaWdodCB0byBib3R0b20tbGVmdCAtLT4KICA8cGF0aCBkPSJNIDc4LjUgNTAgQSAzMCAzMCAwIDAgMSAyNCA3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgogIDwhLS0gQm90dG9tLWxlZnQgYXJyb3cgaGVhZCAtLT4KICA8cG9seWxpbmUgcG9pbnRzPSIzNyw3MiAyMiw3MiAyOCw4NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgo8L3N2Zz4=" alt=""><span>משחק חדש</span></button>
@@ -149,7 +171,7 @@ dialog li{margin:6px 0}dialog li img{width:26px;height:26px;vertical-align:middl
 <section class="screen" id="gameScreen" hidden>
   <div class="statusbar">
     <div class="stats">
-      <span class="stat"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBCYXIgMSAoU2hvcnQpIC0tPgogIDxyZWN0IHg9IjIzIiB5PSI0MyIgd2lkdGg9IjEzIiBoZWlnaHQ9IjI2IiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+CiAgPCEtLSBCYXIgMiAoTWVkaXVtKSAtLT4KICA8cmVjdCB4PSI0NCIgeT0iMzMiIHdpZHRoPSIxMyIgaGVpZ2h0PSIzNiIgcng9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgogIDwhLS0gQmFyIDMgKFRhbGwpIC0tPgogIDxyZWN0IHg9IjY1IiB5PSIyMCIgd2lkdGg9IjEzIiBoZWlnaHQ9IjQ5IiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+Cjwvc3ZnPg==" alt=""><span>פסטיבל <b id="festNum">1</b> מתוך 3</span></span>
+      <span class="stat"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBCYXIgMSAoU2hvcnQpIC0tPgogIDxyZWN0IHg9IjIzIiB5PSI0MyIgd2lkdGg9IjEzIiBoZWlnaHQ9IjI2IiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+CiAgPCEtLSBCYXIgMiAoTWVkaXVtKSAtLT4KICA8cmVjdCB4PSI0NCIgeT0iMzMiIHdpZHRoPSIxMyIgaGVpZ2h0PSIzNiIgcng9IjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgogIDwhLS0gQmFyIDMgKFRhbGwpIC0tPgogIDxyZWN0IHg9IjY1IiB5PSIyMCIgd2lkdGg9IjEzIiBoZWlnaHQ9IjQ5IiByeD0iMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+Cjwvc3ZnPg==" alt=""><span>משימה <b id="taskNum">1</b> מתוך 8</span></span>
       <span class="stat"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBPdXRlciBjb25jZW50cmljIHJpbmcgLS0+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMzQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIC8+CiAgPCEtLSBJbm5lciBjb25jZW50cmljIHJpbmcgLS0+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMjIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIC8+Cjwvc3ZnPg==" alt=""><span>מטבעות <b id="coinsVal">0</b></span></span>
       <span class="stat"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBGbGFtZSBvdXRsaW5lIC0tPgogIDxwYXRoIGQ9Ik0gNDYgODAgQyAzMSA3NywgMjYgNjIsIDMzIDQ5IEMgMzQgNDYsIDM2IDQ0LCAzNCAzOCBDIDM3IDQyLCA0MCA0OSwgMzkgNTIgQyA0MCA0NSwgNDEgMzMsIDQ3IDIxIEMgNDggMzEsIDQ2IDM4LCA1NSA0MiBDIDU3IDM5LCA1OCAzNSwgNTcgMzIgQyA2MCAzNiwgNjEgNDIsIDYwIDQ2IEMgNjUgNDQsIDY5IDQ2LCA3MSA1MiBDIDc1IDY0LCA2NyA3NywgNTQgODAiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KPC9zdmc+" alt=""><span>רצף <b id="streakVal">0</b></span></span>
       <span class="stat"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBPdXRlciB3aGl0ZSByaW5nIC0tPgogIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjM0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy4yIiAvPgogIDwhLS0gQ2VudGVyIGNpcmNsZSAmIGhhbmRzIC0tPgogIDxsaW5lIHgxPSI1MCIgeTE9IjQ5IiB4Mj0iNTAiIHkyPSIzMCIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgogIDxsaW5lIHgxPSI1MCIgeTE9IjUxIiB4Mj0iMzUiIHkyPSI2MyIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgogIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjIuNSIgZmlsbD0iIzEzMzg2MyIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiIC8+Cjwvc3ZnPg==" alt=""><span>זמן <b id="timeVal" dir="ltr">0:00</b></span></span>
@@ -161,6 +183,20 @@ dialog li{margin:6px 0}dialog li img{width:26px;height:26px;vertical-align:middl
     <div class="card board-card"><svg id="board" viewBox="0 0 704 652" role="application" aria-label="מפת הפסטיבל על מערכת צירים"></svg></div>
     <div class="card answers">
       <div class="options" id="options"></div>
+      <div class="kb-wrap" id="kbWrap" hidden>
+        <div class="ans-row"><label for="ans" id="kbLabel">התשובה</label><input class="ans" id="ans" autocomplete="off" inputmode="numeric"><span id="kbUnit"></span></div>
+        <div id="keyboard" class="keyboard" dir="ltr" aria-label="מקלדת מתמטית" role="group">
+          <button class="key confirm" data-action="confirm" type="button">אישור</button>
+          <button class="key" data-k="7" type="button">7</button><button class="key" data-k="8" type="button">8</button><button class="key" data-k="9" type="button">9</button><span class="gap"></span>
+          <button class="key op" data-k="+" aria-label="פלוס" type="button">+</button><button class="key op" data-k="−" aria-label="מינוס" type="button">−</button>
+          <button class="key" data-k="4" type="button">4</button><button class="key" data-k="5" type="button">5</button><button class="key" data-k="6" type="button">6</button><span class="gap"></span>
+          <button class="key op" data-k="·" aria-label="כפל" type="button">·</button><button class="key op" data-k=":" aria-label="חילוק" type="button">:</button>
+          <button class="key" data-k="1" type="button">1</button><button class="key" data-k="2" type="button">2</button><button class="key" data-k="3" type="button">3</button><span class="gap"></span>
+          <button class="key op" data-k="(" aria-label="סוגר פותח" type="button"><bdo dir="ltr">(</bdo></button><button class="key op" data-k=")" aria-label="סוגר סוגר" type="button"><bdo dir="ltr">)</bdo></button>
+          <button class="key" data-k="0" type="button">0</button><button class="key" data-k="." aria-label="נקודה עשרונית" type="button">.</button><button class="key op" data-k="/" aria-label="קו שבר" type="button">/</button><span class="gap"></span>
+          <button class="key action" data-action="back" aria-label="מחק תו" type="button">⌫</button><button class="key action" data-action="clear" type="button">נקה</button>
+        </div>
+      </div>
       <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
       <div class="answer-actions">
         <button class="btn text" id="hintBtn" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBCdWxiIGdsYXNzIHNoYXBlIC0tPgogIDxwYXRoIGQ9Ik0gMzcgNjAgQyAzMSA1MywgMzAgMzgsIDM4IDI3IEMgNDUgMTgsIDU1IDE4LCA2MiAyNyBDIDcwIDM4LCA2OSA1MywgNjMgNjAiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgLz4KICA8IS0tIEJ1bGIgYmFzZSBzY3JldyB0aHJlYWRzIC0tPgogIDxwYXRoIGQ9Ik0gMzkgNjMgTCA2MSA2MyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgogIDxwYXRoIGQ9Ik0gNDAgNjMgTCAzNyA2OCBMIDYzIDY4IEwgNjAgNjMiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KICA8cGF0aCBkPSJNIDM4IDcwIEwgNDAgNzYgQyA0MSA3OCwgNTkgNzgsIDYwIDc2IEwgNjIgNzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4KPC9zdmc+" alt=""><span>רמז</span></button>
@@ -182,8 +218,9 @@ dialog li{margin:6px 0}dialog li img{width:26px;height:26px;vertical-align:middl
 <section class="screen" id="endScreen" hidden>
   <div class="card center">
     <img class="trophy" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBDdXAgYm9keSAmIHN0ZW0gLS0+CiAgPHBhdGggZD0iTSAyOCAyNCBMIDcyIDI0IEMgNzIgNDQsIDYyIDU1LCA1NCA1NyBMIDU0IDc1IEMgNTAgNzUsIDQyIDc3LCAzNiA3OSBMIDY0IDc5IEMgNTggNzcsIDUwIDc1LCA0NiA3NSBMIDQ2IDU3IEMgMzggNTUsIDI4IDQ0LCAyOCAyNCBaIiAKICAgICAgICBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgogIDwhLS0gTGVmdCBIYW5kbGUgLS0+CiAgPHBhdGggZD0iTSAyOCAzNSBDIDE4IDM1LCAxOCA1MiwgMzggNTIiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+CiAgPCEtLSBSaWdodCBIYW5kbGUgLS0+CiAgPHBhdGggZD0iTSA3MiAzNSBDIDgyIDM1LCA4MiA1MiwgNjIgNTIiIAogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+CiAgPCEtLSBCYXNlIHVuZGVybGluZSAtLT4KICA8bGluZSB4MT0iMzMiIHkxPSI3OSIgeDI9IjY3IiB5Mj0iNzkiIHN0cm9rZT0iI0ZGRkZGRiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIC8+Cjwvc3ZnPg==" alt="גביע">
-    <h2>כל הפסטיבלים נפתחו!</h2>
-    <p>הפקתם 3 פסטיבלים ופתרתם את כל 15 המשימות.</p>
+    <h2>הפסטיבל נפתח!</h2>
+    <div id="endArt"></div>
+    <p>הצבתם את המשאיות, הקמתם 130 מטרים של גדר, הצבתם פקח והגדלתם את המתחם ל־50 יחידות שטח.</p>
     <div class="summary" id="summary"></div>
     <div class="actions">
       <button class="btn primary" id="againBtn" type="button"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iNDgiIGZpbGw9IiMxMzM4NjMiIC8+CiAgPCEtLSBUb3AgYXJjIGZyb20gYm90dG9tLWxlZnQgdG8gdG9wLXJpZ2h0IC0tPgogIDxwYXRoIGQ9Ik0gMjEuNSA1MCBBIDMwIDMwIDAgMCAxIDc2IDI5IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMy41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIC8+CiAgPCEtLSBUb3AtcmlnaHQgYXJyb3cgaGVhZCAtLT4KICA8cG9seWxpbmUgcG9pbnRzPSI2MywyOCA3OCwyOCA3MiwxMyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgogIAogIDwhLS0gQm90dG9tIGFyYyBmcm9tIHRvcC1yaWdodCB0byBib3R0b20tbGVmdCAtLT4KICA8cGF0aCBkPSJNIDc4LjUgNTAgQSAzMCAzMCAwIDAgMSAyNCA3MSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAvPgogIDwhLS0gQm90dG9tLWxlZnQgYXJyb3cgaGVhZCAtLT4KICA8cG9seWxpbmUgcG9pbnRzPSIzNyw3MiAyMiw3MiAyOCw4NyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjMuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgo8L3N2Zz4=" alt=""><span>משחק חדש</span></button>
@@ -242,26 +279,18 @@ $('#hero').innerHTML=`<img class="hero hero-img" src="data:image/webp;base64,Ukl
 const S=40,X0=-8.8,Y0=7.4;               // יחידה = 40 פיקסלים במערכת ה־viewBox
 const sx=x=>(x-X0)*S, sy=y=>(Y0-y)*S;
 const GX=[-8,8],GY=[-6,6],PARK_Y=-8.25;
-const PARK_X={falafel:-6,pizza:-2,ice:2,juice:6,table:0};
+const PARK_X={falafel:-6,pizza:-2,ice:2,juice:6,table:0,cop:0};
 const board=$('#board');
 
-/* ====================== פסטיבלים ====================== */
-const NAMES=['פסטיבל האוכל בגן סאקר','שוק הלילה בתחנה הראשונה','פסטיבל הקיץ בטיילת ארמון הנציב','יריד האוכל בעמק המצלבה','פסטיבל הרחוב במחנה יהודה'];
-function makeFestival(prev){
-  for(let k=0;k<500;k++){
-    const w=[6,8,10][rnd(0,2)],h=[4,6][rnd(0,1)],x1=rnd(-7,7-w),y1=rnd(-5,4-h);
-    if(!(x1<0||y1<0))continue;                               // תמיד יש שיעור שלילי
-    if(prev.some(f=>f.x1===x1&&f.y1===y1&&f.w===w&&f.h===h))continue;
-    const types=shuffle(Object.keys(TRUCKS)),corners=[[x1,y1],[x1+w,y1],[x1+w,y1+h],[x1,y1+h]];
-    const trucks=types.map((t,i)=>({type:t,target:corners[i]}));
-    const usedMissing=prev.map(f=>f.missing);
-    let missing=shuffle(types).find(t=>!usedMissing.includes(t));
-    return {x1,y1,w,h,x2:x1+w,y2:y1+h,trucks,missing,center:[x1+w/2,y1+h/2]};
-  }
-}
-const TASKS_PER=5;
-let S_=null;  // מצב המשחק
+/* ====================== המשימות (קבועות, לפי מצגת הפסטיבל) ====================== */
+/* משאיות: פלאפל (−3, 3), פיצה (−3, −2), מיצים (5, 3), גלידה – הקודקוד הרביעי (5, −2). יחידה = 5 מטרים. */
+const START={falafel:[-3,3],pizza:[-3,-2],juice:[5,3],ice:[5,-2]};
+const BIG={juice:[7,3],ice:[7,-2]};
+const NT=8;
+const TASK_NAMES=['הצבת המשאיות','גדר ביחידות','גדר במטרים','שטח במטרים רבועים','הפקח','שיעורי הפקח','הגדלת המתחם','מה השתנה?'];
+let S_=null;
 const G=()=>S_;
+function F(){return S_.f;}
 
 /* ====================== צלילים ====================== */
 let muted=false;try{muted=localStorage.getItem('prisma-fest-muted')==='true';}catch{}
@@ -273,160 +302,204 @@ function updateMute(){const b=$('#muteBtn');b.setAttribute('aria-pressed',String
 
 /* ====================== מהלך ====================== */
 function newGame(){
-  const fests=[];for(let i=0;i<3;i++)fests.push(makeFestival(fests));
-  const names=shuffle(NAMES).slice(0,3);fests.forEach((f,i)=>f.name=names[i]);
-  S_={fests,fi:0,ti:0,coins:0,stars:0,streak:0,best:0,seconds:0,results:[],active:true,atBridge:false};
+  S_={f:{pos:{falafel:null,pizza:null,juice:null,ice:null},locked:{},rect:null,fence:false,fenceShown:false,cop:null,copDone:false,big:false},
+      ti:0,coins:0,stars:0,streak:0,best:0,seconds:0,results:[],active:true};
   startTask();show('game');
 }
-function F(){return S_.fests[S_.fi];}
 function show(name){
-  for(const n of ['start','game','bridge','end'])$('#'+n+'Screen').hidden=n!==name;
+  for(const n of ['start','game','end'])$('#'+n+'Screen').hidden=n!==name;
   $('#homeBtn').hidden=name==='start';$('#menuBtn').hidden=name!=='game';
   if(name==='start'){const going=S_&&S_.active;$('#startBtn span').textContent=going?'המשך המשחק':'יוצאים לדרך';$('#newBtn').hidden=!going;}
   window.scrollTo({top:0});
 }
 function stats(){
-  $('#festNum').textContent=S_.fi+1;$('#coinsVal').textContent=S_.coins;$('#streakVal').textContent=S_.streak;
+  $('#taskNum').textContent=S_.ti+1;$('#coinsVal').textContent=S_.coins;$('#streakVal').textContent=S_.streak;
   $('#timeVal').textContent=`${Math.floor(S_.seconds/60)}:${String(S_.seconds%60).padStart(2,'0')}`;
-  const total=3*TASKS_PER,cur=S_.fi*TASKS_PER+S_.ti;
-  $('#progress').innerHTML=Array.from({length:total},(_,k)=>(k&&k%TASKS_PER===0?'<span class="gap"></span>':'')+`<span class="${k<S_.results.length?(S_.results[k]?'first':'later'):k===cur?'now':''}"></span>`).join('');
+  $('#progress').innerHTML=Array.from({length:NT},(_,k)=>`<span class="${k<S_.results.length?(S_.results[k]?'first':'later'):k===S_.ti?'now':''}"></span>`).join('');
 }
 function feedback(html,kind){const f=$('#feedback');f.innerHTML=html;f.className='feedback'+(kind?' '+kind:'');}
 
-/* מצב הפריטים על הלוח בכל משימה */
+const rect=(a,b)=>({x1:Math.min(a[0],b[0]),y1:Math.min(a[1],b[1]),x2:Math.max(a[0],b[0]),y2:Math.max(a[1],b[1])});
 function startTask(){
-  const f=F();S_.tries=0;S_.solved=false;feedback('');$('#nextBtn').hidden=true;$('#hintBtn').hidden=false;$('#options').innerHTML='';
-  if(S_.ti===0){   // כל המשאיות (חוץ מהחסרה) בחניה
-    f.pos={};f.trucks.forEach(t=>{f.pos[t.type]=null;});f.locked={};f.fence=false;f.fenceShown=false;f.table=null;f.tableDone=false;f.labels=false;
-  }
-  if(S_.ti===1){f.pos[f.missing]=null;}
-  if(S_.ti===4){f.table=null;}
+  const f=F(),t=S_.ti;S_.tries=0;S_.solved=false;S_.sel=new Set();feedback('');$('#nextBtn').hidden=true;$('#hintBtn').hidden=false;$('#options').innerHTML='';$('#kbWrap').hidden=true;
+  if(t===6){f.pos.juice=null;f.pos.ice=null;f.locked.juice=false;f.locked.ice=false;f.fence=false;f.rect=null;}
   renderPrompt();drawBoard();stats();
 }
-const truckOf=type=>F().trucks.find(t=>t.type===type);
 function renderPrompt(){
-  const f=F(),t=S_.ti,miss=TRUCKS[f.missing].name,head=`<p class="fest-name">${f.name}</p>`;
-  let html='';
+  const f=F(),t=S_.ti,head=`<p class="fest-name">משימה ${t+1} מתוך ${NT}</p>`;let html='';
   if(t===0){
-    html=`<h3>הציבו את משאיות האוכל</h3><p>גררו כל משאית מהחניה לנקודה שלה במפה.</p><div class="chips">${f.trucks.filter(x=>x.type!==f.missing).map(x=>`<div class="chip ${f.locked[x.type]?'ok':''}" id="chip-${x.type}">${chipSVG(x.type)}<span>משאית ${TRUCKS[x.type].name}: ${M(P(...x.target))}</span><span class="tick">${f.locked[x.type]?'✓':''}</span></div>`).join('')}</div>`;
+    html=`<h3>3 משאיות אוכל תפסו מקום</h3><div class="chips">${['falafel','pizza','juice'].map(x=>`<div class="chip ${f.locked[x]?'ok':''}">${chipSVG(x)}<span>משאית ${TRUCKS[x].name} עומדת בנקודה ${M(P(...START[x]))}</span><span class="tick">${f.locked[x]?'✓':''}</span></div>`).join('')}</div>
+      <p style="margin-top:10px">המארגנים רוצים שארבע המשאיות ייצרו יחד מתחם <b>בצורת מלבן</b>, ובמרכזו יוצבו שולחנות אוכל.</p>
+      <p>מצאו את הנקודה שבה צריכה לעמוד המשאית הרביעית, <b>משאית הגלידה</b>, כך שיתקבל מלבן.</p><p><b>גררו את משאיות האוכל למקומן.</b></p>`;
   }else if(t===1){
-    html=`<h3>איפה תעמוד משאית ${miss}?</h3><p>המארגנים רוצים שארבע המשאיות ייצרו יחד מתחם <b>בצורת מלבן</b>.</p><p>גררו את משאית ${miss} למקום המתאים.</p>`;
+    html=`<h3>גדר מסביב למתחם</h3><p>מנהלי האירוע רוצים להציב גדר מסביב למתחם המלבני.</p><p><b>מה אורך הגדר ביחידות של מערכת הצירים?</b></p>`;
   }else if(t===2){
-    html=`<h3>גדר מסביב למתחם</h3><p>מקיפים את המתחם המלבני בגדר. <b>מה אורך הגדר ביחידות של מערכת הצירים?</b></p>`;
+    html=`<h3>כמה מטרים של גדר?</h3><p><b>כמה מטרים של גדר יש לקנות במציאות?</b></p><p>כל יחידה במערכת הצירים משמשת 5 מטר במציאות.</p>`;
   }else if(t===3){
-    html=`<h3>כמה מטרים של גדר?</h3><p>במפה, כל יחידה מייצגת <b>5 מטרים</b> במציאות. אורך הגדר הוא ${M(String(2*(f.w+f.h)))} יחידות.</p><p><b>כמה מטרים של גדר צריך לקנות?</b></p>`;
+    html=`<h3>שטח המתחם</h3><p>בסיום הפסטיבל חברת הניקיון גובה תשלום לפי השטח שעליו עמדו משאיות האוכל.</p><p><b>מהו שטח המלבן במטר רבוע?</b></p>`;
+  }else if(t===4){
+    html=`<h3>הפקח</h3><p>הוחלט להעמיד פקח <b>באמצע הדרך</b> בין משאית ${TRUCKS.falafel.name} למשאית ${TRUCKS.juice.name}.</p><p><b>גררו את הפקח למקום המתאים.</b></p>`;
+  }else if(t===5){
+    html=`<h3>שיעורי הפקח</h3><p><b>מהם שיעורי הנקודה שהפקח עומד בה?</b></p>`;
+  }else if(t===6){
+    html=`<h3>מגדילים את המתחם</h3><p>הנהלת הפסטיבל החליטה להגדיל את המתחם בגלל ריבוי המשתתפים, ולכן השטח גדל.</p><p>משאית ${TRUCKS.ice.name} ומשאית ${TRUCKS.juice.name} התבקשו לזוז, וכעת השטח גדל ל־${M('50')} יחידות שטח.</p><p><b>גררו את משאיות האוכל למקומן.</b></p>`;
   }else{
-    html=`<h3>שולחנות במרכז</h3><p>השולחנות יעמדו בדיוק <b>במרכז המתחם</b>.</p><p>גררו את השולחן לנקודת המרכז.</p>`;
+    html=`<h3>מה השתנה?</h3><p>המתחם גדל ל־${M('50')} יחידות שטח.</p><p><b>אילו תכונות של המלבן השתנו?</b> סמנו את כל התשובות הנכונות.</p><p style="font-size:16px;color:#5b6b7c">אורך = הצלע הארוכה של המלבן, רוחב = הצלע הקצרה.</p>`;
   }
-  $('#prompt').innerHTML=head+html;
-  if(t===2||t===3)renderOptions();
+  $('#prompt').innerHTML=html;
+  if(t>=1&&t<=3)openKeyboard();
+  if(t===5)renderCopOptions();
+  if(t===7)renderProps();
 }
-function renderOptions(){
-  const f=F(),Pm=2*(f.w+f.h);let opts;
-  if(S_.ti===2){
-    const c=[{v:f.w+f.h,fb:'זה רק חצי מהגדר: רוחב ועוד אורך. הגדר מקיפה את <b>כל ארבע</b> הצלעות.'},{v:f.w*f.h,fb:'זה השטח של המתחם (רוחב × אורך). הגדר היא <b>ההיקף</b>: סכום אורכי כל הצלעות.'}];
-    if(f.x1<0&&f.x2>0){const wrongW=Math.abs(f.x2-Math.abs(f.x1));c.unshift({v:2*(wrongW+f.h),fb:`בדקו את הרוחב: מ־${M(mn(f.x1))} עד ${M(mn(f.x2))} יש ${M(String(f.w))} יחידות, כי חוצים את ציר ה־y.`});}
-    if(f.y1<0&&f.y2>0){const wrongH=Math.abs(f.y2-Math.abs(f.y1));c.unshift({v:2*(f.w+wrongH),fb:`בדקו את האורך: מ־${M(mn(f.y1))} עד ${M(mn(f.y2))} יש ${M(String(f.h))} יחידות, כי חוצים את ציר ה־x.`});}
-    opts=pick3({v:Pm,ok:true},c);
-  }else{
-    opts=pick3({v:Pm*5,ok:true},[{v:Pm,fb:'זה האורך ביחידות. כל יחידה היא 5 מטרים — צריך להמיר.'},{v:Pm+5,fb:'כל יחידה שווה 5 מטרים, ולכן <b>כופלים</b> ב־5 ולא מוסיפים 5.'},{v:Pm*10,fb:'כל יחידה היא 5 מטרים, לא 10.'}]);
-  }
-  S_.opts=opts;
-  $('#options').innerHTML=opts.map((o,k)=>`<button class="opt" type="button" data-k="${k}">${o.v}${S_.ti===3?' <small>מטר</small>':''}</button>`).join('');
-}
-function pick3(correct,cands){const out=[correct],seen=new Set([correct.v]);for(const c of cands){if(out.length>=3)break;if(c.v>0&&!seen.has(c.v)){seen.add(c.v);out.push(c);}}
-  for(let d=2;out.length<3;d+=2)if(!seen.has(correct.v+d)){seen.add(correct.v+d);out.push({v:correct.v+d,fb:'בדקו שוב את אורכי הצלעות.'});}return shuffle(out);}
 
+/* ---------- תשובה מוקלדת (משימות 2–4) ---------- */
+function openKeyboard(){
+  const unit={1:'יחידות',2:'מטר',3:'מ"ר'}[S_.ti];
+  $('#kbLabel').textContent={1:'אורך הגדר הוא',2:'אורך הגדר הוא',3:'שטח המלבן הוא'}[S_.ti];
+  $('#kbUnit').textContent=unit;$('#ans').value='';$('#ans').disabled=false;$('#ans').className='ans';$('#kbWrap').hidden=false;$('#kbWrap').classList.remove('idle');
+  if(!matchMedia('(pointer:coarse)').matches)$('#ans').focus({preventScroll:true});
+}
+const ANS={1:26,2:130,3:1000};
+function typedTip(t,v){
+  const tips={
+    1:{13:`זה רק חצי מהגדר: אורך ועוד רוחב. הגדר מקיפה את <b>כל ארבע</b> הצלעות.`,
+       40:`זה השטח של המלבן (${M('8 · 5')}). הגדר היא <b>ההיקף</b> – סכום אורכי כל הצלעות.`,
+       14:`בדקו את הצלע האופקית: מ־${M('−3')} עד ${M('5')} יש ${M('8')} יחידות, כי חוצים את ציר ה־${M('y')}.`,
+       18:`בדקו את הצלע האנכית: מ־${M('−2')} עד ${M('3')} יש ${M('5')} יחידות, כי חוצים את ציר ה־${M('x')}.`},
+    2:{26:`זה אורך הגדר <b>ביחידות</b>. כל יחידה היא 5 מטרים – צריך להמיר.`,31:`כל יחידה שווה 5 מטרים, ולכן <b>כופלים</b> ב־5 ולא מוסיפים 5.`,260:`כל יחידה היא 5 מטרים, לא 10.`},
+    3:{40:`זה השטח ב<b>יחידות שטח</b>. כל יחידת שטח היא ריבוע של ${M('5')} על ${M('5')} מטרים. כמה מ"ר זה?`,
+       200:`כפלתם את 40 יחידות השטח ב־5. אבל יחידת שטח היא ריבוע של ${M('5 · 5')} מטרים – כלומר ${M('25')} מ"ר.`,
+       26:`זה אורך הגדר (ההיקף), לא השטח.`,130:`זה אורך הגדר במטרים, לא השטח.`}};
+  return tips[t][v]||{1:`הגדר עוברת על ארבע הצלעות. אורך הצלע האופקית: מ־${M('−3')} עד ${M('5')}; הצלע האנכית: מ־${M('−2')} עד ${M('3')}.`,
+                     2:`אורך הגדר הוא ${M('26')} יחידות, וכל יחידה היא 5 מטרים.`,
+                     3:`אפשר לחשב את אורכי הצלעות במטרים (${M('8 · 5')} ו־${M('5 · 5')}) ואז לכפול.`}[t];
+}
+function checkTyped(){
+  if(S_.solved)return;const raw=$('#ans').value.replace(/\s/g,'');if(!raw)return;
+  if(!/^\d+$/.test(raw)){feedback('כתבו מספר שלם אחד – את התוצאה.','hint');return;}
+  const v=+raw,t=S_.ti;
+  if(v===ANS[t]){$('#ans').classList.add('ok');$('#ans').disabled=true;$('#kbWrap').classList.add('idle');
+    const sol={1:`הצלע האופקית: ${M('5 − (−3) = 8')}, הצלע האנכית: ${M('3 − (−2) = 5')}. אורך הגדר: ${M('8 + 5 + 8 + 5 = 26')} יחידות.`,
+               2:`${M('26 · 5 = 130')} מטרים של גדר.`,
+               3:`הצלעות במטרים: ${M('8 · 5 = 40')} ו־${M('5 · 5 = 25')}. השטח: ${M('40 · 25 = 1000')} מ"ר.`}[t];
+    if(t===1){F().fence=true;drawBoard();}
+    feedback(`<b>נכון!</b> ${sol}`,'ok');solved();
+  }else{$('#ans').classList.add('bad');feedback(`<b>עדיין לא.</b> ${typedTip(t,v)} נסו שוב.`,'bad');missed();}
+}
+
+/* ---------- שיעורי הפקח (משימה 6) ---------- */
+function renderCopOptions(){
+  const opts=shuffle([{t:P(1,3),ok:true},{t:P(1,2),fb:`שיעור ה־${M('y')} של הפקח כמו של שתי המשאיות – הוא עומד על אותו קו אופקי.`},
+                      {t:P(-1,3),fb:`הפקח עומד <b>מימין</b> לציר ה־${M('y')}, ולכן שיעור ה־${M('x')} שלו חיובי.`},{t:P(3,1),fb:`החלפתם בין ${M('x')} ל־${M('y')}. השיעור הראשון הוא ${M('x')}.`}]);
+  S_.opts=opts;$('#options').className='options';
+  $('#options').innerHTML=opts.map((o,k)=>`<button class="opt" type="button" data-k="${k}">${M(o.t)}</button>`).join('');
+}
+/* ---------- מה השתנה? (משימה 8, בחירה מרובה) ---------- */
+const PROPS=[{t:'היקף המלבן גדל',ok:true},{t:'אורך המלבן גדל',ok:true},{t:'שטח המלבן גדל',ok:true},{t:'רוחב המלבן גדל',ok:false}];
+function renderProps(){
+  $('#options').className='options props';
+  $('#options').innerHTML=PROPS.map((o,k)=>`<button class="opt prop" type="button" data-p="${k}" aria-pressed="false">${o.t}</button>`).join('')+`<button class="btn primary check" id="propCheck" type="button"><span>בדיקה</span></button>`;
+  $('#propCheck').onclick=checkProps;
+}
+function checkProps(){
+  if(S_.solved)return;const sel=S_.sel;
+  if(!sel.size){feedback('סמנו לפחות תכונה אחת.','hint');return;}
+  const missing=PROPS.map((o,k)=>o.ok&&!sel.has(k)?o.t:null).filter(Boolean),extra=PROPS.map((o,k)=>!o.ok&&sel.has(k)?o.t:null).filter(Boolean);
+  if(!missing.length&&!extra.length){document.querySelectorAll('.prop').forEach(b=>{b.disabled=true;b.classList.remove('sel');if(PROPS[+b.dataset.p].ok)b.classList.add('correct');});$('#propCheck').disabled=true;
+    feedback(`<b>נכון!</b> המלבן היה ${M('8 · 5')} ועכשיו ${M('10 · 5')}: האורך גדל מ־${M('8')} ל־${M('10')}, ההיקף מ־${M('26')} ל־${M('30')}, והשטח מ־${M('40')} ל־${M('50')}. הרוחב נשאר ${M('5')}.`,'ok');solved();return;}
+  let msg=[];
+  if(extra.length)msg.push(`הרוחב (הצלע הקצרה) לא השתנה: גם לפני וגם אחרי, ממשאית ${TRUCKS.pizza.name} עד משאית ${TRUCKS.falafel.name} יש ${M('5')} יחידות.`);
+  if(missing.length)msg.push(`חסרה עוד תכונה שהשתנתה. השוו את המלבן החדש (${M('10 · 5')}) לישן (${M('8 · 5')}).`);
+  feedback(`<b>עדיין לא.</b> ${msg.join(' ')} נסו שוב.`,'bad');missed();
+}
 $('#options').addEventListener('click',e=>{
-  const b=e.target.closest('.opt');if(!b||b.disabled||S_.solved)return;const o=S_.opts[+b.dataset.k],f=F();
+  const p=e.target.closest('.prop');
+  if(p&&!S_.solved){const k=+p.dataset.p;if(S_.sel.has(k))S_.sel.delete(k);else S_.sel.add(k);p.classList.toggle('sel',S_.sel.has(k));p.setAttribute('aria-pressed',String(S_.sel.has(k)));return;}
+  const b=e.target.closest('.opt');if(!b||b.disabled||S_.solved||S_.ti!==5)return;const o=S_.opts[+b.dataset.k];
   if(o.ok){b.classList.add('correct');document.querySelectorAll('.opt').forEach(x=>x.disabled=true);
-    if(S_.ti===2){f.fence=true;feedback(`<b>נכון!</b> רוחב ${M(mn(f.x2)+' − '+(f.x1<0?'('+mn(f.x1)+')':mn(f.x1))+' = '+f.w)}, אורך ${M(mn(f.y2)+' − '+(f.y1<0?'('+mn(f.y1)+')':mn(f.y1))+' = '+f.h)}. היקף: ${M(f.w+' + '+f.h+' + '+f.w+' + '+f.h+' = '+2*(f.w+f.h))} יחידות.`,'ok');drawBoard();}
-    else feedback(`<b>נכון!</b> ${M(2*(f.w+f.h)+' × 5 = '+10*(f.w+f.h))} מטרים של גדר.`,'ok');
-    solved();
-  }else{b.classList.add('wrong');b.disabled=true;feedback('<b>עדיין לא.</b> '+o.fb+' נסו שוב.','bad');missed();}
+    feedback(`<b>נכון!</b> הפקח עומד ב־${M(P(1,3))}: שיעור ה־${M('x')} באמצע בין ${M('−3')} ל־${M('5')}, ושיעור ה־${M('y')} כמו של שתי המשאיות – ${M('3')}.`,'ok');solved();}
+  else{b.classList.add('wrong');b.disabled=true;feedback('<b>עדיין לא.</b> '+o.fb+' נסו שוב.','bad');missed();}
 });
 
 function solved(){
   S_.solved=true;const first=S_.tries===0;
   S_.coins+=first?2:1;if(first){S_.stars++;S_.streak++;S_.best=Math.max(S_.best,S_.streak);}else S_.streak=0;
   S_.results.push(first);play('success');
-  const lastTask=S_.ti===TASKS_PER-1,lastFest=S_.fi===2;
-  $('#nextLabel').textContent=lastTask?(lastFest?'לסיום':'פותחים את הפסטיבל!'):'למשימה הבאה';
+  $('#nextLabel').textContent=S_.ti===NT-1?'לסיום':'למשימה הבאה';
   $('#nextBtn').hidden=false;$('#hintBtn').hidden=true;stats();$('#nextBtn').focus({preventScroll:true});
 }
 function missed(){S_.tries++;S_.streak=0;play('error');stats();}
 
-$('#nextBtn').onclick=()=>{
-  if(!S_.solved)return;
-  if(S_.ti<TASKS_PER-1){S_.ti++;startTask();return;}
-  if(S_.fi===2)return finish();
-  const f=F();S_.atBridge=true;
-  $('#bridgeTitle').textContent=`${f.name} נפתח!`;
-  $('#bridgeText').innerHTML=`הצבתם ${M('4')} משאיות, הקמתם ${M(String(10*(f.w+f.h)))} מטרים של גדר, והשולחנות עומדים ב־${M(P(...f.center))}.`;
-  $('#bridgeArt').innerHTML=miniFestival(f);show('bridge');
-};
-$('#bridgeBtn').onclick=()=>{S_.atBridge=false;S_.fi++;S_.ti=0;startTask();show('game');};
+$('#nextBtn').onclick=()=>{if(!S_.solved)return;if(S_.ti<NT-1){S_.ti++;startTask();return;}finish();};
 function finish(){
   S_.active=false;const t=`${Math.floor(S_.seconds/60)}:${String(S_.seconds%60).padStart(2,'0')}`;
-  $('#summary').innerHTML=`<div><img src="${ICON.coins}" alt=""><span>מטבעות</span><strong>${S_.coins}</strong></div><div><img src="${ICON.star}" alt=""><span>בניסיון הראשון</span><strong>${S_.stars} מתוך 15</strong></div><div><img src="${ICON.streak}" alt=""><span>הרצף הארוך</span><strong>${S_.best}</strong></div><div><img src="${ICON.clock}" alt=""><span>זמן</span><strong dir="ltr">${t}</strong></div>`;
+  $('#endArt').innerHTML=miniFestival();
+  $('#summary').innerHTML=`<div><img src="${ICON.coins}" alt=""><span>מטבעות</span><strong>${S_.coins}</strong></div><div><img src="${ICON.star}" alt=""><span>בניסיון הראשון</span><strong>${S_.stars} מתוך ${NT}</strong></div><div><img src="${ICON.streak}" alt=""><span>הרצף הארוך</span><strong>${S_.best}</strong></div><div><img src="${ICON.clock}" alt=""><span>זמן</span><strong dir="ltr">${t}</strong></div>`;
   show('end');play('finish');
 }
-function miniFestival(f){ // איור קטן של הפסטיבל שנבנה
-  const pad=1.6,minx=f.x1-pad,maxx=f.x2+pad,miny=f.y1-.8,maxy=f.y2+2.2,k=40;
-  const X=x=>(x-minx)*k,Y=y=>(maxy-y)*k;
+function miniFestival(){ // איור הפסטיבל הגדול שנבנה
+  const f={x1:-3,y1:-2,x2:7,y2:3},pad=1.6,minx=f.x1-pad,maxx=f.x2+pad,miny=f.y1-.8,maxy=f.y2+2.2,k=40;
+  const X=x=>(x-minx)*k,Y=y=>(maxy-y)*k,tr={falafel:[-3,3],pizza:[-3,-2],juice:[7,3],ice:[7,-2]};
   return `<svg class="hero" viewBox="0 0 ${(maxx-minx)*k} ${(maxy-miny)*k}" style="max-width:520px" aria-hidden="true">
-   <rect x="${X(f.x1)}" y="${Y(f.y2)}" width="${f.w*k}" height="${f.h*k}" fill="#f3f7ea" stroke="#b98a45" stroke-width="5" stroke-dasharray="2 8" stroke-linecap="round"/>
-   ${f.trucks.map(t=>`<g transform="translate(${X(t.target[0])} ${Y(t.target[1])})">${truckSVG(t.type)}</g>`).join('')}
-   <g transform="translate(${X(f.center[0])} ${Y(f.center[1])})">${tableSVG()}</g></svg>`;
+   <rect x="${X(f.x1)}" y="${Y(f.y2)}" width="${10*k}" height="${5*k}" fill="#f3f7ea" stroke="#b98a45" stroke-width="5" stroke-dasharray="2 8" stroke-linecap="round"/>
+   ${Object.entries(tr).map(([t,p])=>`<g transform="translate(${X(p[0])} ${Y(p[1])})">${truckSVG(t)}</g>`).join('')}
+   <g transform="translate(${X(2)} ${Y(0.5)})">${tableSVG()}</g><g transform="translate(${X(1)} ${Y(3)})">${copSVG()}</g></svg>`;
 }
+
+/* ---------- הפקח (איור SVG) ---------- */
+function copSVG(){return `<ellipse cx="0" cy="2" rx="14" ry="3.5" fill="rgba(23,54,94,.15)"/>
+  <rect x="-7" y="-20" width="5" height="21" rx="2" fill="#17365e"/><rect x="2" y="-20" width="5" height="21" rx="2" fill="#17365e"/>
+  <path d="M-11 -44 h22 l2 26 h-26 z" fill="#17365e"/><path d="M-11 -44 h22 l1 12 h-24 z" fill="#e7b976"/>
+  <rect x="-15" y="-43" width="5" height="20" rx="2.5" fill="#17365e"/><rect x="10" y="-43" width="5" height="20" rx="2.5" fill="#17365e"/>
+  <circle cx="0" cy="-52" r="8" fill="#f2c9a0"/><path d="M-10 -56 h20 v-4 a10 6 0 0 0 -20 0 z" fill="#17365e"/><rect x="-11" y="-57" width="22" height="3" rx="1.5" fill="#0f2442"/>
+  <circle cx="4" cy="-38" r="2.6" fill="#f7d36b"/>`;}
 
 /* ====================== ציור הלוח ====================== */
 function drawBoard(){
-  const f=F();let o='';
+  const f=F(),t=S_.ti;let o='';
   o+=`<rect x="0" y="0" width="704" height="652" fill="#fbfaf5"/>`;
   o+=bunting(sx(-8.6),sx(8.6),6,22);
-  // רשת
   for(let x=GX[0];x<=GX[1];x++)o+=`<line x1="${sx(x)}" y1="${sy(GY[0])}" x2="${sx(x)}" y2="${sy(GY[1])}" stroke="#e2ddd0" stroke-width="1" stroke-dasharray="2 4"/>`;
   for(let y=GY[0];y<=GY[1];y++)o+=`<line x1="${sx(GX[0])}" y1="${sy(y)}" x2="${sx(GX[1])}" y2="${sy(y)}" stroke="#e2ddd0" stroke-width="1" stroke-dasharray="2 4"/>`;
-  // צירים עם חיצים ומספרים
   o+=`<line x1="${sx(-8.4)}" y1="${sy(0)}" x2="${sx(8.45)}" y2="${sy(0)}" stroke="#6f7f8f" stroke-width="2.2"/><path d="M${sx(8.7)} ${sy(0)} l-13 -7 v14 z" fill="#6f7f8f"/>`;
   o+=`<line x1="${sx(0)}" y1="${sy(-6.3)}" x2="${sx(0)}" y2="${sy(6.35)}" stroke="#6f7f8f" stroke-width="2.2"/><path d="M${sx(0)} ${sy(6.6)} l-7 13 h14 z" fill="#6f7f8f"/>`;
   o+=`<text class="axisname" x="${sx(8.55)}" y="${sy(0)-12}" text-anchor="middle">x</text><text class="axisname" x="${sx(0)+16}" y="${sy(6.5)+6}" text-anchor="middle">y</text>`;
   for(let x=GX[0];x<=GX[1];x++)if(x)o+=`<text class="num" x="${sx(x)}" y="${sy(0)+17}" text-anchor="middle">${mn(x)}</text>`;
   for(let y=GY[0];y<=GY[1];y++)if(y)o+=`<text class="num" x="${sx(0)-7}" y="${sy(y)+4.5}" text-anchor="end">${mn(y)}</text>`;
   o+=`<text class="num" x="${sx(0)-7}" y="${sy(0)+17}" text-anchor="end">0</text>`;
-  // חניה
   o+=`<rect x="${sx(-8.6)}" y="${sy(-6.75)}" width="${17.2*S}" height="${2.15*S}" rx="14" fill="#eef1f4" stroke="#d6dde6"/><text x="${sx(8.35)}" y="${sy(-7.05)}" text-anchor="end" style="font:700 14px 'Simpler Pro',Arial;fill:#7d8a99">חניה</text>`;
-  // מלבן המתחם — מוצג אחרי שכל הארבע במקום
-  const allPlaced=f.trucks.every(t=>f.locked[t.type]);
-  if(allPlaced&&!f.fence)o+=`<rect x="${sx(f.x1)}" y="${sy(f.y2)}" width="${f.w*S}" height="${f.h*S}" fill="rgba(109,181,128,.10)" stroke="#6db580" stroke-width="2.2" stroke-dasharray="7 6"/>`;
-  if(f.fence){const len=2*(f.w+f.h)*S;o+=`<rect x="${sx(f.x1)}" y="${sy(f.y2)}" width="${f.w*S}" height="${f.h*S}" fill="rgba(231,185,118,.13)"/><rect class="${f.fenceShown?'':'fence'}" style="--len:${len}" x="${sx(f.x1)}" y="${sy(f.y2)}" width="${f.w*S}" height="${f.h*S}" fill="none" stroke="#b98a45" stroke-width="5" stroke-linecap="round"/>`;
-    for(let x=f.x1;x<=f.x2;x++)for(const y of [f.y1,f.y2])o+=`<rect class="${f.fenceShown?'':'post'}" x="${sx(x)-3}" y="${sy(y)-9}" width="6" height="14" rx="2" fill="#8a6634"/>`;
-    for(let y=f.y1+1;y<f.y2;y++)for(const x of [f.x1,f.x2])o+=`<rect class="${f.fenceShown?'':'post'}" x="${sx(x)-3}" y="${sy(y)-9}" width="6" height="14" rx="2" fill="#8a6634"/>`;
-    o+=`<text class="coord" x="${(sx(f.x1)+sx(f.x2))/2}" y="${sy(f.y1)+20}" text-anchor="middle">${f.w}</text><text class="coord" x="${sx(f.x2)+16}" y="${(sy(f.y1)+sy(f.y2))/2+5}" text-anchor="start">${f.h}</text>`;}
-  // שולחן
-  if(S_.ti===4||f.tableDone){const p=f.table||[PARK_X.table,PARK_Y];o+=item('table',p,!f.tableDone);}
+  // המלבן
+  const r=t>=7||(t===6&&S_.solved)?{x1:-3,y1:-2,x2:7,y2:3}:(t>=1&&t<6)||(t===0&&S_.solved)?{x1:-3,y1:-2,x2:5,y2:3}:null;
+  if(r){const w=r.x2-r.x1,h=r.y2-r.y1;
+    if(f.fence&&t<6){const len=2*(w+h)*S;o+=`<rect x="${sx(r.x1)}" y="${sy(r.y2)}" width="${w*S}" height="${h*S}" fill="rgba(231,185,118,.13)"/><rect class="${f.fenceShown?'':'fence'}" style="--len:${len}" x="${sx(r.x1)}" y="${sy(r.y2)}" width="${w*S}" height="${h*S}" fill="none" stroke="#b98a45" stroke-width="5" stroke-linecap="round"/>`;
+      for(let x=r.x1;x<=r.x2;x++)for(const y of [r.y1,r.y2])o+=`<rect class="${f.fenceShown?'':'post'}" x="${sx(x)-3}" y="${sy(y)-9}" width="6" height="14" rx="2" fill="#8a6634"/>`;
+      for(let y=r.y1+1;y<r.y2;y++)for(const x of [r.x1,r.x2])o+=`<rect class="${f.fenceShown?'':'post'}" x="${sx(x)-3}" y="${sy(y)-9}" width="6" height="14" rx="2" fill="#8a6634"/>`;
+    }else o+=`<rect x="${sx(r.x1)}" y="${sy(r.y2)}" width="${w*S}" height="${h*S}" fill="rgba(109,181,128,.10)" stroke="#6db580" stroke-width="2.2" stroke-dasharray="7 6"/>`;
+    if(t>=1&&!(t===6&&!S_.solved))o+=`<text class="coord" x="${(sx(r.x1)+sx(r.x2))/2}" y="${sy(r.y1)+20}" text-anchor="middle">${w}</text><text class="coord" x="${sx(r.x2)+16}" y="${(sy(r.y1)+sy(r.y2))/2+5}" text-anchor="start">${h}</text>`;
+  }
+  // הפקח
+  if(t===4||t===5){const p=f.cop||[PARK_X.cop,PARK_Y];o+=item('cop',p,t===4&&!f.copDone);}
   // משאיות
-  const order=[...f.trucks].sort((a,b)=>(f.pos[a.type]?-f.pos[a.type][1]:-99)-(f.pos[b.type]?-f.pos[b.type][1]:-99));
-  for(const t of order){
-    const visible=t.type!==f.missing||S_.ti>=1;if(!visible)continue;
-    const p=f.pos[t.type]||[PARK_X[t.type],PARK_Y];const draggable=!f.locked[t.type]&&((S_.ti===0&&t.type!==f.missing)||(S_.ti===1&&t.type===f.missing));
-    o+=item(t.type,p,draggable);
+  const types=['falafel','pizza','juice','ice'];
+  const order=types.sort((a,b)=>(f.pos[a]?-f.pos[a][1]:-99)-(f.pos[b]?-f.pos[b][1]:-99));
+  for(const ty of order){
+    const p=f.pos[ty]||[PARK_X[ty],PARK_Y];
+    const draggable=!f.locked[ty]&&(t===0||(t===6&&(ty==='juice'||ty==='ice')));
+    o+=item(ty,p,draggable);
   }
   board.innerHTML=o;
   if(f.fence)f.fenceShown=true;
 }
-const ART_SCALE=.65;   // המשאית קטנה, ונקודת העמידה בולטת
+const ART_SCALE=.65;
 function item(type,p,draggable){
-  const onGrid=p[1]>=GY[0]-0.01;const art=type==='table'?tableSVG():truckSVG(type);
-  const label=type==='table'?'שולחן':'משאית '+TRUCKS[type].name;
-  const locked=type==='table'?F().tableDone:F().locked[type];
-  // שיעורים מוצגים רק אחרי שהפריט ננעל במקום הנכון — בזמן הגרירה אין רמז
+  const onGrid=p[1]>=GY[0]-0.01;const art=type==='cop'?copSVG():truckSVG(type);
+  const label=type==='cop'?'פקח':'משאית '+TRUCKS[type].name;
+  const locked=type==='cop'?F().copDone:F().locked[type];
   return `<g class="${draggable?'drag':''}" data-type="${type}" ${draggable?`tabindex="0" role="button" aria-label="${label}${onGrid?' על המפה':' בחניה'}"`:''} transform="translate(${sx(p[0])} ${sy(p[1])})">
     <rect class="focusring" x="-30" y="-52" width="60" height="62" rx="10" fill="transparent" stroke="none"/>
     <g transform="scale(${ART_SCALE})">${art}</g>
     ${onGrid?`<circle r="8" fill="#fff" stroke="${locked?'#6db580':'#832058'}" stroke-width="3.5"/><circle r="3" fill="${locked?'#6db580':'#832058'}"/>`:''}
-    ${onGrid&&locked?`<text class="coord" x="0" y="24" text-anchor="middle">${P(...p)}</text>`:''}
+    ${onGrid&&locked&&type!=='cop'?`<text class="coord" x="0" y="24" text-anchor="middle">${P(...p)}</text>`:''}
   </g>`;
 }
 
@@ -435,14 +508,13 @@ let drag=null;
 function toWorld(e){const pt=board.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(board.getScreenCTM().inverse());return [q.x/S+X0,Y0-q.y/S];}
 board.addEventListener('pointerdown',e=>{
   const g=e.target.closest('.drag');if(!g||S_.solved)return;e.preventDefault();
-  const type=g.dataset.type,f=F(),cur=type==='table'?f.table:f.pos[type],w=toWorld(e);
+  const type=g.dataset.type,f=F(),cur=type==='cop'?f.cop:f.pos[type],w=toWorld(e);
   const base=cur||[PARK_X[type],PARK_Y];
   drag={type,g,off:[base[0]-w[0],base[1]-w[1]],from:cur};board.setPointerCapture(e.pointerId);g.classList.add('dragging');
   g.parentNode.appendChild(g);
 });
 board.addEventListener('pointermove',e=>{
   if(!drag)return;const w=toWorld(e),x=w[0]+drag.off[0],y=w[1]+drag.off[1];
-  // תצוגה רציפה; הצמדה לצומת הקרוב בזמן הגרירה
   const sn=snap(x,y);const p=sn||[x,y];drag.last=sn;
   drag.g.setAttribute('transform',`translate(${sx(p[0])} ${sy(p[1])})`);
 });
@@ -452,73 +524,88 @@ function endDrag(){if(!drag)return;const d=drag;drag=null;place(d.type,d.last||n
 function occupied(p,except){const f=F();return Object.entries(f.pos).some(([k,v])=>k!==except&&v&&v[0]===p[0]&&v[1]===p[1]);}
 function place(type,p){
   const f=F();
-  if(!p||(type!=='table'&&occupied(p,type))){ // מחוץ לרשת או על משאית אחרת — חוזר לחניה
-    if(type==='table')f.table=null;else f.pos[type]=null;drawBoard();
+  if(!p||(type!=='cop'&&occupied(p,type))){
+    if(type==='cop')f.cop=null;else f.pos[type]=null;drawBoard();
     if(p)feedback('בנקודה הזאת כבר עומדת משאית. בחרו נקודה אחרת.','hint');return;}
-  if(type==='table')f.table=p;else f.pos[type]=p;
+  if(type==='cop')f.cop=p;else f.pos[type]=p;
   check(type,p);drawBoard();
 }
+function coordTip(name,[a,b],[x,y]){
+  if(a===y&&b===x)return `נראה שהחלפתם בין ${M('x')} ל־${M('y')}. השיעור הראשון הוא ${M('x')} — כמה ימינה או שמאלה מהראשית.`;
+  if((a===-x&&b===y)||(a===x&&b===-y)||(a===-x&&b===-y))return `שימו לב לסימן: ${M('x')} שלילי — שמאלה מהראשית; ${M('y')} שלילי — למטה.`;
+  if(a===x)return `שיעור ה־${M('x')} נכון! בדקו את שיעור ה־${M('y')}.`;
+  if(b===y)return `שיעור ה־${M('y')} נכון! בדקו את שיעור ה־${M('x')}.`;
+  return `בדקו שוב את שני השיעורים: קודם ${M('x')} — ימינה או שמאלה, ואחר כך ${M('y')} — למעלה או למטה.`;
+}
 function check(type,p){
-  const f=F(),[a,b]=p;
-  if(S_.ti===0){
-    const [x,y]=truckOf(type).target;
-    if(a===x&&b===y){f.locked[type]=true;const left=f.trucks.filter(t=>t.type!==f.missing&&!f.locked[t.type]).length;
-      renderPrompt();
-      if(left===0){feedback(`<b>מצוין!</b> שלוש המשאיות במקומן.`,'ok');solved();}
-      else{feedback(`<b>נכון!</b> משאית ${TRUCKS[type].name} עומדת ב־${M(P(x,y))}. נשארו עוד ${left}.`,'ok');play('success');}
-    }else{
+  const f=F(),[a,b]=p,t=S_.ti;
+  if(t===0){
+    const target=START[type];
+    if(a===target[0]&&b===target[1]){f.locked[type]=true;const left=['falafel','pizza','juice','ice'].filter(x=>!f.locked[x]).length;renderPrompt();
+      if(!left){feedback(`<b>מצוין!</b> ארבע המשאיות במקומן. משאית ${TRUCKS.ice.name} עומדת ב־${M(P(5,-2))}: שיעור ה־${M('x')} כמו של משאית ${TRUCKS.juice.name}, ושיעור ה־${M('y')} כמו של משאית ${TRUCKS.pizza.name}. התקבל מלבן!`,'ok');solved();}
+      else{feedback(`<b>נכון!</b> משאית ${TRUCKS[type].name} עומדת ב־${M(P(a,b))}. נשארו עוד ${left}.`,'ok');play('success');}
+    }else if(type==='ice'){
       let tip;
-      if(a===y&&b===x)tip=`נראה שהחלפתם בין ${M('x')} ל־${M('y')}. השיעור הראשון הוא ${M('x')} — כמה ימינה או שמאלה מהראשית.`;
-      else if((a===-x&&b===y)||(a===x&&b===-y)||(a===-x&&b===-y))tip=`שימו לב לסימן: ${M('x')} שלילי — שמאלה מהראשית; ${M('y')} שלילי — למטה.`;
-      else if(a===x)tip=`שיעור ה־${M('x')} נכון! בדקו את שיעור ה־${M('y')}.`;
-      else if(b===y)tip=`שיעור ה־${M('y')} נכון! בדקו את שיעור ה־${M('x')}.`;
-      else tip=`בדקו שוב את שני השיעורים: קודם ${M('x')} — ימינה או שמאלה, ואחר כך ${M('y')} — למעלה או למטה.`;
-      feedback(`<b>עדיין לא.</b> משאית ${TRUCKS[type].name} לא עומדת במקום הנכון. ${tip}`,'bad');missed();
-    }
-  }else if(S_.ti===1){
-    const [x,y]=truckOf(type).target;
-    if(a===x&&b===y){f.locked[type]=true;
-      const sameX=f.trucks.find(t=>t.type!==type&&t.target[0]===x),sameY=f.trucks.find(t=>t.type!==type&&t.target[1]===y);
-      feedback(`<b>נכון!</b> משאית ${TRUCKS[type].name} עומדת ב־${M(P(x,y))}: שיעור ה־${M('x')} כמו של משאית ${TRUCKS[sameX.type].name}, ושיעור ה־${M('y')} כמו של משאית ${TRUCKS[sameY.type].name}. התקבל מלבן!`,'ok');solved();
-    }else{
-      const sameX=f.trucks.find(t=>t.type!==type&&t.target[0]===x),sameY=f.trucks.find(t=>t.type!==type&&t.target[1]===y);
-      let tip;
-      if(a===x)tip=`שיעור ה־${M('x')} מתאים! עכשיו הצלע צריכה להיות אופקית: למשאית ${TRUCKS[type].name} ולמשאית ${TRUCKS[sameY.type].name} צריך להיות אותו שיעור ${M('y')}.`;
-      else if(b===y)tip=`שיעור ה־${M('y')} מתאים! עכשיו הצלע צריכה להיות אנכית: למשאית ${TRUCKS[type].name} ולמשאית ${TRUCKS[sameX.type].name} צריך להיות אותו שיעור ${M('x')}.`;
+      if(a===5)tip=`שיעור ה־${M('x')} מתאים! עכשיו הצלע התחתונה צריכה להיות אופקית: למשאית ${TRUCKS.ice.name} ולמשאית ${TRUCKS.pizza.name} צריך להיות אותו שיעור ${M('y')}.`;
+      else if(b===-2)tip=`שיעור ה־${M('y')} מתאים! עכשיו הצלע צריכה להיות אנכית: למשאית ${TRUCKS.ice.name} ולמשאית ${TRUCKS.juice.name} צריך להיות אותו שיעור ${M('x')}.`;
       else tip=`במלבן שצלעותיו מקבילות לצירים, לכל קודקוד יש שכן עם אותו שיעור ${M('x')} ושכן עם אותו שיעור ${M('y')}.`;
       feedback(`<b>עדיין לא.</b> כאן לא נוצר מלבן. ${tip}`,'bad');missed();
-    }
-  }else if(S_.ti===4){
-    const [cx,cy]=f.center;
-    if(a===cx&&b===cy){f.tableDone=true;feedback(`<b>נכון!</b> המרכז הוא ${M(P(cx,cy))}: באמצע בין ${M(mn(f.x1))} ל־${M(mn(f.x2))}, ובאמצע בין ${M(mn(f.y1))} ל־${M(mn(f.y2))}.`,'ok');solved();}
+    }else{feedback(`<b>עדיין לא.</b> משאית ${TRUCKS[type].name} לא עומדת במקום הנכון. ${coordTip(TRUCKS[type].name,p,START[type])}`,'bad');missed();}
+  }else if(t===4){
+    if(a===1&&b===3){f.copDone=true;feedback(`<b>נכון!</b> הפקח עומד בדיוק באמצע הדרך בין שתי המשאיות.`,'ok');solved();}
     else{let tip;
-      if(a===cx)tip=`שיעור ה־${M('x')} נכון! עכשיו מצאו את האמצע בין ${M(mn(f.y1))} ל־${M(mn(f.y2))}.`;
-      else if(b===cy)tip=`שיעור ה־${M('y')} נכון! עכשיו מצאו את האמצע בין ${M(mn(f.x1))} ל־${M(mn(f.x2))}.`;
-      else if(a<f.x1||a>f.x2||b<f.y1||b>f.y2)tip='השולחן מחוץ למתחם. המרכז נמצא בתוך המלבן.';
-      else tip=`המרכז נמצא באמצע הרוחב ובאמצע האורך של המלבן.`;
-      feedback(`<b>עדיין לא.</b> השולחן לא במרכז. ${tip}`,'bad');missed();}
+      if(b===3&&a>-3&&a<5)tip=`הפקח עומד על הקו בין המשאיות, אבל לא באמצע. המרחק בין המשאיות הוא ${M('8')} יחידות – כמה זה חצי?`;
+      else if(b===3)tip=`הפקח צריך לעמוד <b>בין</b> שתי המשאיות, לא מחוץ להן.`;
+      else tip=`שתי המשאיות עומדות בגובה ${M('3')}. גם הפקח, שעומד באמצע הדרך ביניהן, נמצא באותו קו אופקי.`;
+      feedback(`<b>עדיין לא.</b> ${tip}`,'bad');missed();}
+  }else if(t===6){
+    const target=BIG[type];
+    if(a===target[0]&&b===target[1]){f.locked[type]=true;
+      if(f.locked.juice&&f.locked.ice){feedback(`<b>מצוין!</b> המתחם החדש: ${M('10 · 5 = 50')} יחידות שטח. הצלע האנכית נשארה ${M('5')}, ולכן הצלע האופקית צריכה להיות ${M('50 : 5 = 10')}.`,'ok');solved();}
+      else{feedback(`<b>נכון!</b> משאית ${TRUCKS[type].name} עומדת ב־${M(P(a,b))}. עכשיו המשאית השנייה.`,'ok');play('success');}
+    }else{let tip;
+      const ty=target[1];
+      if(a===5)tip=`זה המקום הקודם – אז השטח היה ${M('40')}. המתחם צריך לגדול.`;
+      else if(b!==ty)tip=`משאית ${TRUCKS[type].name} צריכה להישאר באותו קו אופקי (${M('y = '+mn(ty))}), כדי שהמתחם יישאר מלבן.`;
+      else tip=`הצלע האנכית נשארת ${M('5')}. כמה צריכה להיות הצלע האופקית כדי שהשטח יהיה ${M('50')}? ספרו מ־${M('x = −3')}.`;
+      feedback(`<b>עדיין לא.</b> ${tip}`,'bad');missed();}
   }
 }
-/* מקלדת: Enter מעביר מהחניה לראשית, החצים מזיזים ביחידה */
 board.addEventListener('keydown',e=>{
   const g=e.target.closest('.drag');if(!g||S_.solved)return;const type=g.dataset.type,f=F();
-  const cur=type==='table'?f.table:f.pos[type];
+  const cur=type==='cop'?f.cop:f.pos[type];
   const d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,1],ArrowDown:[0,-1]}[e.key];
   if(!d&&e.key!=='Enter'&&e.key!==' ')return;e.preventDefault();
   let p=cur?[cur[0]+(d?d[0]:0),cur[1]+(d?d[1]:0)]:[0,0];
   if(!snap(...p))return;
-  if(type==='table')f.table=p;else f.pos[type]=p;drawBoard();
+  if(type==='cop')f.cop=p;else f.pos[type]=p;drawBoard();
   board.querySelector(`.drag[data-type="${type}"]`)?.focus();
   if(cur&&(e.key==='Enter'||e.key===' ')){check(type,p);drawBoard();board.querySelector(`.drag[data-type="${type}"]`)?.focus();}
 });
 
+/* מקלדת מתמטית */
+$('#ans').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkTyped();}});
+$('#ans').addEventListener('input',()=>$('#ans').classList.remove('bad'));
+if(matchMedia('(pointer:coarse)').matches)$('#ans').setAttribute('inputmode','none');
+$('#keyboard').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||S_.solved)return;const a=$('#ans');
+  if(b.dataset.k!==undefined)a.value+=b.dataset.k;
+  if(b.dataset.action==='back')a.value=a.value.slice(0,-1);
+  if(b.dataset.action==='clear')a.value='';
+  a.classList.remove('bad');
+  if(b.dataset.action==='confirm')checkTyped();
+});
+
 $('#hintBtn').onclick=()=>{
-  const f=F(),t=S_.ti;
-  const H=[`<b>רמז:</b> בזוג סדור ${M('(x, y)')} המספר הראשון אומר כמה ימינה (חיובי) או שמאלה (שלילי) מהראשית, והשני כמה למעלה או למטה.`,
-    `<b>רמז:</b> במלבן הזה הצלעות מקבילות לצירים. בצלע אופקית לשני הקודקודים אותו ${M('y')}; בצלע אנכית — אותו ${M('x')}.`,
-    `<b>רמז:</b> הרוחב הוא ההפרש בין שיעורי ה־${M('x')}: ${M(mn(f.x2)+' − '+(f.x1<0?'('+mn(f.x1)+')':mn(f.x1)))}. האורך: ההפרש בין שיעורי ה־${M('y')}. הגדר עוברת על ארבע הצלעות.`,
-    `<b>רמז:</b> יחידה אחת = 5 מטרים, אז ${M('2')} יחידות = ${M('10')} מטרים. כמה מטרים יש ב־${M(String(2*(f.w+f.h)))} יחידות?`,
-    `<b>רמז:</b> שיעור ה־${M('x')} של המרכז נמצא בדיוק באמצע בין ${M(mn(f.x1))} ל־${M(mn(f.x2))}. אפשר לספור ${M(String(f.w/2))} יחידות מצד שמאל.`][t];
+  const t=S_.ti;
+  const H=[`<b>רמז:</b> בזוג סדור ${M('(x, y)')} המספר הראשון אומר כמה ימינה (חיובי) או שמאלה (שלילי) מהראשית, והשני כמה למעלה או למטה. במלבן שצלעותיו מקבילות לצירים, לכל קודקוד יש שכן עם אותו ${M('x')} ושכן עם אותו ${M('y')}.`,
+    `<b>רמז:</b> אורך הצלע האופקית הוא ההפרש בין שיעורי ה־${M('x')}: ${M('5 − (−3)')}. הצלע האנכית: ${M('3 − (−2)')}. הגדר עוברת על ארבע הצלעות.`,
+    `<b>רמז:</b> יחידה אחת = 5 מטרים, אז ${M('2')} יחידות = ${M('10')} מטרים. כמה מטרים יש ב־${M('26')} יחידות?`,
+    `<b>רמז:</b> חשבו קודם את אורכי הצלעות במטרים: ${M('8')} יחידות = ? מטרים, ${M('5')} יחידות = ? מטרים. אחר כך כופלים.`,
+    `<b>רמז:</b> שתי המשאיות באותו גובה (${M('y = 3')}). באמצע הדרך בין ${M('x = −3')} ל־${M('x = 5')} – כמה צעדים מכל צד?`,
+    `<b>רמז:</b> קראו קודם כמה ימינה מהראשית עומד הפקח (${M('x')}), ואחר כך כמה למעלה (${M('y')}).`,
+    `<b>רמז:</b> השטח = צלע אופקית × צלע אנכית. הצלע האנכית נשארת ${M('5')}, והשטח צריך להיות ${M('50')}.`,
+    `<b>רמז:</b> השוו בין המלבן הישן (${M('8 · 5')}) לחדש (${M('10 · 5')}): מה גדל ומה נשאר כמו שהיה?`][t];
   feedback(H,'hint');
 };
 
@@ -526,11 +613,10 @@ $('#hintBtn').onclick=()=>{
 function dialog(html){stopAudio();$('#dlgBody').innerHTML=html;$('#dlg').showModal();}
 $('#dlgClose').onclick=()=>$('#dlg').close();
 const HELP=`<h2 id="dlgTitle">איך משחקים?</h2>
-<p>מפיקים 3 פסטיבלי אוכל. בכל פסטיבל 5 משימות:</p>
-<ul><li>מציבים 3 משאיות לפי השיעורים שלהן — גוררים מהחניה לנקודה במפה.</li>
-<li>מוצאים איפה תעמוד המשאית הרביעית כך שייווצר מלבן.</li>
-<li>מחשבים את אורך הגדר ביחידות, ואחר כך במטרים (כל יחידה = 5 מטרים).</li>
-<li>גוררים את השולחן למרכז המתחם.</li></ul>
+<p>מקימים מתחם משאיות אוכל על מערכת צירים, ב־8 משימות. כל יחידה במערכת הצירים היא 5 מטרים במציאות.</p>
+<ul><li>גוררים משאיות (ואת הפקח) מהחניה לנקודה במפה.</li>
+<li>בשאלות החישוב כותבים את התשובה במקלדת ולוחצים "אישור".</li>
+<li>בשאלה האחרונה מסמנים את כל התשובות הנכונות ולוחצים "בדיקה".</li></ul>
 <ul><li>אפשר לנסות שוב עד שמצליחים. <img src="${ICON.hint}" alt="">רמז עוזר בלי להוריד מטבעות.</li>
 <li><img src="${ICON.coins}" alt="">מטבעות: משימה שנפתרה בניסיון הראשון — 2 מטבעות; אחרי טעות — מטבע אחד.</li>
 <li><img src="${ICON.streak}" alt="">רצף: כמה משימות ברצף נפתרו בניסיון הראשון. טעות מאפסת את הרצף.</li>
@@ -540,7 +626,7 @@ $('#helpBtn').onclick=()=>dialog(HELP);$('#startHelpBtn').onclick=()=>dialog(HEL
 $('#menuBtn').onclick=()=>{dialog(`<h2 id="dlgTitle">תפריט</h2><div class="menu-items"><button class="btn secondary" id="mResume" type="button"><img src="${ICON.play}" alt=""><span>המשך המשחק</span></button><button class="btn secondary" id="mRestart" type="button"><img src="${ICON.restart}" alt=""><span>משחק חדש</span></button><button class="btn secondary" id="mHome" type="button"><img src="${ICON.home}" alt=""><span>מסך הבית</span></button></div>`);
   $('#mResume').onclick=()=>$('#dlg').close();$('#mRestart').onclick=()=>{$('#dlg').close();newGame();};$('#mHome').onclick=()=>{$('#dlg').close();stopAudio();show('start');};};
 $('#homeBtn').onclick=()=>{stopAudio();show('start');};$('#endHomeBtn').onclick=()=>{stopAudio();show('start');};
-$('#startBtn').onclick=()=>{if(S_&&S_.active)show(S_.atBridge?'bridge':'game');else newGame();};
+$('#startBtn').onclick=()=>{if(S_&&S_.active)show('game');else newGame();};
 $('#newBtn').onclick=newGame;$('#againBtn').onclick=newGame;
 $('#muteBtn').onclick=()=>{muted=!muted;stopAudio();updateMute();try{localStorage.setItem('prisma-fest-muted',String(muted));}catch{}};
 setInterval(()=>{if(S_&&S_.active&&!$('#gameScreen').hidden&&!document.hidden&&!$('#dlg').open){S_.seconds++;stats();}},1000);
